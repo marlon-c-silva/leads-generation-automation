@@ -1,0 +1,23 @@
+{
+    "PROSPECCAO_PROMPT_TEMPLATE": "Atue como especialista em pesquisa B2B.\n\nOBJETIVO\nLocalize empresas B2B no Brasil conforme os parâmetros e identifique seus decisores via web search e LinkedIn.\n\nPARAMETROS\n- Segmento: {segmento_empresa}\n- Porte: {tamanho_empresa}\n- Localizacao: {localizacao_empresa}\n- Total Empresas: {qtd_empresas}\n- Decisores por Empresa: {qtd_decisores}\n- Cargos Decisores: {cargos_decisores}\n\nREGRAS DE BUSCA\n1. Retorne exatamente {qtd_empresas} empresas B2B em \"{localizacao_empresa}\" do segmento \"{segmento_empresa}\" e porte \"{tamanho_empresa}\".\n2. Priorize empresas com site e LinkedIn ativos.\n3. Para cada empresa, localize ate {qtd_decisores} decisores nos cargos: {cargos_decisores}.\n4. Capture URLs diretas do LinkedIn da empresa e dos decisores.\n\nFORMATO DE SAIDA\nRetorne EXCLUSIVAMENTE um JSON valido conforme o schema. Sem markdown (sem ```json), sem texto adicional. Proibido incluir chaves extras fora do schema.\n\nSCHEMA JSON\n{\n  \"empresas\": [\n    {\n      \"nome_empresa\": \"string\",\n      \"site_oficial\": \"string\",\n      \"linkedin_empresa_url\": \"string\",\n      \"segmento\": \"string\",\n      \"porte\": \"string\",\n      \"cidade\": \"string\",\n      \"estado\": \"string\",\n      \"decisores\": [\n        {\n          \"nome\": \"string\",\n          \"cargo\": \"string\",\n          \"linkedin_url\": \"string\"\n        }\n      ]\n    }\n  ]\n}",
+    "PROSPECCAO_SEGMENTO_EMPRESA": "tecnologia",
+    "PROSPECCAO_TAMANHO_EMPRESA": "medio porte",
+    "PROSPECCAO_LOCALIZACAO_EMPRESA": "Sao Paulo - SP",
+    "PROSPECCAO_QTD_EMPRESAS": "10",
+    "PROSPECCAO_QTD_DECISORES": "3",
+    "PROSPECCAO_CARGOS_DECISORES": "CEO, CTO, Head de Vendas, Diretor Comercial",
+    "GEMINI_API_KEY": "SUA_GEMINI_API_KEY",
+    "GEMINI_MODEL": "gemini-2.5-flash",
+    "USE_GOOGLE_SEARCH_TOOL": "auto",
+    "WEB_SEARCH_PROVIDER": "serper",
+    "SERPER_API_KEY": "SUA_SERPER_API_KEY",
+    "SERPER_NUM_RESULTS": "5",
+    "APIFY_API_TOKEN": "SEU_APIFY_API_TOKEN",
+    "APIFY_LINKEDIN_ACTOR_ID": "LpVuK3Zozwuipa5bp",
+    "KIPFLOW_API_KEY": "SUA_KIPFLOW_API_KEY",
+    "KIPFLOW_BASE_URL": "https://api.kipflow.com",
+    "BRASIL_API_BASE_URL": "https://brasilapi.com.br/api/cnpj/v1",
+    "POSTGRES_CONN_ID": "postgres_default",
+    "POSTGRES_SCHEMA": "public",
+    "POSTGRES_TABLE": "prospeccao_b2b_runs"
+}
