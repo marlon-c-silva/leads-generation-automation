@@ -1,0 +1,63 @@
+# Python virtualenv
+.venv/
+venv/
+env/
+ENV/
+
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Airflow local runtime
+.airflow/
+logs/
+airflow-webserver.pid
+airflow.cfg
+unittests.cfg
+
+# Environment / secrets
+.env
+.env.*
+*.env
+.envrc
+
+# OS / editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Build outputs
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Jupyter and notebooks
+.ipynb_checkpoints/
+
+# Database / local data
+*.sqlite3
+*.db
+*.dump
+
+# Test / coverage output
+.coverage
+.coverage.*
+htmlcov/
+
+# Logs
+*.log
+
+# Local project runtime
+tmp/
+temp/
+output/
+
+# Optional: keep generated DAG metadata out of git
+airflow.db
