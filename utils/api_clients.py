@@ -57,7 +57,7 @@ def _extrair_linkedin_id(linkedin_url: str | None) -> str | None:
 def extrair_empresas_e_decisores(
     prompt_busca: str,
     gemini_api_key: str,
-    model: str = "gemini-2.0-flash",
+    model: str = "gemini-2.5-flash",
     usar_google_search_tool: bool = True,
     contexto_web: str | None = None,
 ) -> list[Empresa]:
