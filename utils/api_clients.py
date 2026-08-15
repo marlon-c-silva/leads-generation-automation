@@ -10,6 +10,56 @@ from pydantic import BaseModel, Field, TypeAdapter
 logger = logging.getLogger(__name__)
 
 
+def _gerar_conteudo_gemini(
+    client: Any,
+    *,
+    model: str,
+    contents: str,
+    schema: dict[str, Any],
+    temperature: float = 0.1,
+    tools: list[Any] | None = None,
+    types_module: Any | None = None,
+) -> Any:
+    """Gera conteúdo via Interactions API, priorizando o modelo gemini-2.5-flash e tentando aliases compatíveis em caso de 404."""
+    from google.genai.errors import ClientError
+
+    if types_module is None:
+        from google.genai import types as types_module
+
+    modelos = []
+    for candidate in [model, "gemini-3.5-flash-lite", "gemini-3.5-flash", "gemini-2.5-flash", "gemini-2.5-flash-preview-05-20"]:
+        if candidate and candidate not in modelos:
+            modelos.append(candidate)
+
+    ultimo_erro: Exception | None = None
+    for modelo_atual in modelos:
+        try:
+            return client.models.generate_content(
+                model=modelo_atual,
+                contents=contents,
+                config=types_module.GenerateContentConfig(
+                    tools=tools,
+                    response_mime_type="application/json",
+                    response_schema=schema,
+                    temperature=temperature,
+                ),
+            )
+        except ClientError as exc:
+            ultimo_erro = exc
+            message = str(exc)
+            if "404" not in message and "NOT_FOUND" not in message:
+                raise
+            logger.warning(
+                "Modelo Gemini %s indisponível na Interactions API; tentando próximo alias. Detalhe: %s",
+                modelo_atual,
+                message,
+            )
+
+    if ultimo_erro is not None:
+        raise ultimo_erro
+    raise RuntimeError("Nenhum modelo Gemini disponível para geração de conteúdo.")
+
+
 class Decisor(BaseModel):
     nome: str = Field(..., description="Nome do decisor")
     cargo: str | None = Field(default=None, description="Cargo do decisor")
@@ -119,15 +169,14 @@ def extrair_empresas_e_decisores(
     tools = [types.Tool(google_search=types.GoogleSearch())] if usar_google_search_tool else None
 
     client = genai.Client(api_key=gemini_api_key)
-    response = client.models.generate_content(
+    response = _gerar_conteudo_gemini(
+        client=client,
         model=model,
         contents=full_prompt,
-        config=types.GenerateContentConfig(
-            tools=tools,
-            response_mime_type="application/json",
-            response_schema=schema,
-            temperature=0.1,
-        ),
+        schema=schema,
+        temperature=0.1,
+        tools=tools,
+        types_module=types,
     )
 
     raw_text = response.text or "[]"
