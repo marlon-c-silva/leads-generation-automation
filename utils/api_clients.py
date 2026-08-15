@@ -27,7 +27,7 @@ class Empresa(BaseModel):
     decisores: list[Decisor] = Field(default_factory=list, description="Lista de decisores")
     dados_cadastrais: dict[str, Any] | None = Field(
         default=None,
-        description="Dados enriquecidos via BrasilAPI",
+        description="Dados enriquecidos via minhareceita.org",
     )
 
 
@@ -190,19 +190,20 @@ def extrair_empresas_e_decisores(
 def buscar_dados_cnpj(
     cnpj: str,
     timeout_seconds: int = 20,
-    brasil_api_base_url: str = "https://brasilapi.com.br/api/cnpj/v1",
+    brasil_api_base_url: str = "https://minhareceita.org",
 ) -> dict[str, Any] | None:
-    """Consulta dados cadastrais de CNPJ na BrasilAPI."""
+    """Consulta dados cadastrais de CNPJ em minhareceita.org."""
 
     cnpj_normalizado = _normalizar_cnpj(cnpj)
     if not cnpj_normalizado:
         return None
 
-    url = f"{brasil_api_base_url.rstrip('/')}/{cnpj_normalizado}"
+    base_url = (brasil_api_base_url or "https://minhareceita.org").rstrip("/")
+    url = f"{base_url}/{cnpj_normalizado}"
     response = requests.get(url, timeout=timeout_seconds)
 
     if response.status_code == 404:
-        logger.info("CNPJ %s não encontrado na BrasilAPI", cnpj_normalizado)
+        logger.info("CNPJ %s não encontrado em %s", cnpj_normalizado, base_url)
         return None
 
     response.raise_for_status()
