@@ -56,7 +56,7 @@ def _render_prompt_template(template: str, params: dict[str, Any]) -> str:
 
 @dag(
     dag_id="prospeccao_b2b",
-    description="Pipeline de prospecção B2B com Gemini, BrasilAPI, Apify e Kipflow",
+    description="Pipeline de prospecção B2B com Gemini, minhareceita.org, Apify e Kipflow",
     default_args=DEFAULT_ARGS,
     schedule=None,
     start_date=datetime(2026, 1, 1),
@@ -171,9 +171,9 @@ def dag_prospeccao_b2b():
                 "KIPFLOW_BASE_URL",
                 default_var="https://api.kipflow.com",
             ),
-            "brasil_api_base_url": Variable.get(
-                "BRASIL_API_BASE_URL",
-                default_var="https://brasilapi.com.br/api/cnpj/v1",
+            "cnpj_base_url": Variable.get(
+                "CNPJ_BASE_URL",
+                default_var="https://minhareceita.org",
             ),
             "postgres_conn_id": Variable.get(
                 "POSTGRES_CONN_ID",
@@ -240,7 +240,7 @@ def dag_prospeccao_b2b():
         if empresa.cnpj:
             empresa.dados_cadastrais = buscar_dados_cnpj(
                 cnpj=empresa.cnpj,
-                brasil_api_base_url=config["brasil_api_base_url"],
+                brasil_api_base_url=config["cnpj_base_url"],
             )
         return empresa.model_dump(mode="json")
 
