@@ -83,7 +83,7 @@ airflow variables import airflow_variables.example.json
 - `PROSPECCAO_QTD_DECISORES`
 - `PROSPECCAO_CARGOS_DECISORES`
 - `GEMINI_API_KEY`
-- `GEMINI_MODEL`
+- `GEMINI_MODEL` (ex.: `gemini-3.5-flash-lite`)
 - `USE_GOOGLE_SEARCH_TOOL`
 - `WEB_SEARCH_PROVIDER`
 - `SERPER_API_KEY`
