@@ -132,7 +132,8 @@ def dag_prospeccao_b2b():
             default_var="CEO, CTO, Head de Vendas, Diretor Comercial",
         )
 
-        modelo = Variable.get("GEMINI_MODEL", default_var="gemini-2.5-flash")
+        # Google GenAI Interactions API: usar Gemini 3.5 Flash Lite como modelo principal.
+        modelo = Variable.get("GEMINI_MODEL", default_var="gemini-3.5-flash-lite")
         usar_google_search_tool_raw = Variable.get("USE_GOOGLE_SEARCH_TOOL", default_var="auto")
         if usar_google_search_tool_raw.strip().lower() == "auto":
             usar_google_search_tool = not modelo.strip().lower().startswith("gemma")
