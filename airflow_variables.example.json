@@ -16,7 +16,7 @@
     "APIFY_LINKEDIN_ACTOR_ID": "LpVuK3Zozwuipa5bp",
     "KIPFLOW_API_KEY": "SUA_KIPFLOW_API_KEY",
     "KIPFLOW_BASE_URL": "https://api.kipflow.com",
-    "BRASIL_API_BASE_URL": "https://brasilapi.com.br/api/cnpj/v1",
+    "CNPJ_BASE_URL": "https://minhareceita.org",
     "POSTGRES_CONN_ID": "postgres_default",
     "POSTGRES_SCHEMA": "public",
     "POSTGRES_TABLE": "prospeccao_b2b_runs"
