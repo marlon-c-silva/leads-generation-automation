@@ -7,7 +7,7 @@
     "PROSPECCAO_QTD_DECISORES": "3",
     "PROSPECCAO_CARGOS_DECISORES": "CEO, CTO, Head de Vendas, Diretor Comercial",
     "GEMINI_API_KEY": "SUA_GEMINI_API_KEY",
-    "GEMINI_MODEL": "gemini-2.5-flash",
+    "GEMINI_MODEL": "gemini-3.5-flash-lite",
     "USE_GOOGLE_SEARCH_TOOL": "auto",
     "WEB_SEARCH_PROVIDER": "serper",
     "SERPER_API_KEY": "SUA_SERPER_API_KEY",
