@@ -1,3 +1,9 @@
+import sys
+from pathlib import Path
+
+# Adiciona o diretório da raiz do projeto ao sys.path do Python
+sys.path.append(str(Path(__file__).resolve().parent))
+
 from __future__ import annotations
 
 import json
