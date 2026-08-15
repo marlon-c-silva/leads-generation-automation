@@ -1,6 +1,6 @@
 # Leads Generation Automation
 
-Pipeline de prospecção B2B para localizar empresas, identificar decisores e enriquecer dados com integração a Gemini, BrasilAPI, Apify, Serper e Kipflow.
+Pipeline de prospecção B2B para localizar empresas, identificar decisores e enriquecer dados com integração a Gemini, minhareceita.org, Apify, Serper e Kipflow.
 
 ## Visão geral
 
@@ -9,7 +9,7 @@ Este projeto orquestra uma DAG do Apache Airflow responsável por:
 - carregar parâmetros de busca via variáveis do Airflow;
 - buscar contexto web com suporte a Google Search nativo do Gemini ou fallback com Serper;
 - extrair empresas e decisores em formato estruturado;
-- complementar dados cadastrais via BrasilAPI;
+- complementar dados cadastrais via minhareceita.org;
 - raspar perfis do LinkedIn com Apify;
 - enriquecer emails com Kipflow;
 - persistir o resultado final em PostgreSQL;
@@ -92,7 +92,7 @@ airflow variables import airflow_variables.example.json
 - `APIFY_LINKEDIN_ACTOR_ID`
 - `KIPFLOW_API_KEY`
 - `KIPFLOW_BASE_URL`
-- `BRASIL_API_BASE_URL`
+- `CNPJ_BASE_URL`
 - `POSTGRES_CONN_ID`
 - `POSTGRES_SCHEMA`
 - `POSTGRES_TABLE`
