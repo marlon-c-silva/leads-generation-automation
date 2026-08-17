@@ -346,34 +346,54 @@ def enriquecer_emails_kipflow(
     linkedin_ids: list[str],
     kipflow_api_key: str,
     timeout_seconds: int = 45,
-    base_url: str = "https://api.kipflow.com",
+    base_url: str = "https://api.seudominio.com",
 ) -> list[dict[str, Any]]:
-    """Enriquece contatos na Kipflow para obter emails corporativos por linkedin_id."""
+    """Enriquece contatos via GET /social/v1/people/search buscando por profile_public_id."""
 
-    ids_limpos = [item.strip() for item in linkedin_ids if item and item.strip()]
+    if not linkedin_ids:
+        return []
+
+    if not kipflow_api_key:
+        raise ValueError(
+            "API key ausente. Configure a chave de acesso da API."
+        )
+
+    ids_limpos = [
+        item.strip() for item in linkedin_ids if item and str(item).strip()
+    ]
     if not ids_limpos:
         return []
 
-    endpoint = f"{base_url.rstrip('/')}/contacts/v1/emails/batch"
+    endpoint = f"{base_url.rstrip('/')}/social/v1/people/search"
     headers = {
-        "Authorization": f"Bearer {kipflow_api_key}",
-        "Content-Type": "application/json",
+        "X-API-Key": kipflow_api_key.strip(),
+        "Accept": "application/json",
     }
-    payload = {"linkedin_ids": ids_limpos}
 
-    response = requests.post(endpoint, headers=headers, json=payload, timeout=timeout_seconds)
-    response.raise_for_status()
+    resultados: list[dict[str, Any]] = []
 
-    data = response.json()
-    if isinstance(data, list):
-        return data
-    if isinstance(data, dict):
-        for key in ("data", "results", "contacts", "items"):
-            maybe_list = data.get(key)
-            if isinstance(maybe_list, list):
-                return maybe_list
-    return []
+    for profile_id in ids_limpos:
+        params = {"profile_public_id": profile_id}
 
+        try:
+            response = requests.get(
+                endpoint,
+                headers=headers,
+                params=params,
+                timeout=timeout_seconds,
+            )
+            response.raise_for_status()
+
+            data = response.json()
+            if isinstance(data, dict):
+                resultados.append(data)
+            elif isinstance(data, list):
+                resultados.extend(data)
+
+        except requests.RequestException as exc:
+            logger.error("Erro ao buscar perfil '%s': %s", profile_id, exc)
+
+    return resultados
 
 def buscar_resultados_web_serper(
     queries: list[str],
