@@ -346,9 +346,9 @@ def enriquecer_emails_kipflow(
     linkedin_ids: list[str],
     kipflow_api_key: str,
     timeout_seconds: int = 45,
-    base_url: str = "https://api.seudominio.com",
+    base_url: str = "https://api.kipflow.io",
 ) -> list[dict[str, Any]]:
-    """Enriquece contatos via GET /social/v1/people/search buscando por profile_public_id."""
+    """Enriquece contatos via GET https://api.kipflow.io/contacts/v1/emails/profile? buscando por profile_public_id."""
 
     if not linkedin_ids:
         return []
@@ -364,7 +364,7 @@ def enriquecer_emails_kipflow(
     if not ids_limpos:
         return []
 
-    endpoint = f"{base_url.rstrip('/')}/social/v1/people/search"
+    endpoint = f"{base_url.rstrip('/')}/contacts/v1/emails/profile?"
     headers = {
         "X-API-Key": kipflow_api_key.strip(),
         "Accept": "application/json",
@@ -373,7 +373,7 @@ def enriquecer_emails_kipflow(
     resultados: list[dict[str, Any]] = []
 
     for profile_id in ids_limpos:
-        params = {"profile_public_id": profile_id}
+        params = {"linkedin_id": profile_id}
 
         try:
             response = requests.get(
