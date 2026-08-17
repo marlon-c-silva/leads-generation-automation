@@ -229,7 +229,9 @@ def dag_prospeccao_b2b():
             serper_api_key=config["serper_api_key"],
             num_results=config["serper_num_results"],
         )
-        return montar_contexto_web_para_prompt(resultados=resultados)
+        response = montar_contexto_web_para_prompt(resultados=resultados)
+        print("Contexto web coletado para prompt", response)
+        return response
 
     @task
     def extrair_leads_brutos(config: dict[str, Any], contexto_web: str) -> list[dict[str, Any]]:
