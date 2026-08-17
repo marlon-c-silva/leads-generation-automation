@@ -274,7 +274,8 @@ def buscar_dados_cnpj(
 def raspar_perfis_linkedin_apify(
     linkedin_urls: list[str],
     apify_api_token: str,
-    actor_id: str = "harvestapi~linkedin-profile-scraper",
+    actor_id: str = "LpVuK3Zozwuipa5bp",
+    profile_scraper_mode: str = "Profile details no email ($4 per 1k)",
 ) -> list[dict[str, Any]]:
     """Executa o actor da HarvestAPI no Apify via API HTTP direta para extrair perfis do LinkedIn."""
 
@@ -282,29 +283,50 @@ def raspar_perfis_linkedin_apify(
         return []
 
     if not apify_api_token:
-        raise ValueError("Apify API token ausente. Configure a variável APIFY_API_TOKEN.")
+        raise ValueError(
+            "Apify API token ausente. Configure a variável APIFY_API_TOKEN."
+        )
 
-    urls_validas = [url.strip() for url in linkedin_urls if url and str(url).strip()]
+    urls_validas = [
+        url.strip() for url in linkedin_urls if url and str(url).strip()
+    ]
     if not urls_validas:
         return []
 
-    actor_slug = (actor_id or "harvestapi~linkedin-profile-scraper").strip()
-    endpoint = f"https://api.apify.com/v2/actors/{actor_slug}/run-sync-get-dataset-items?token={apify_api_token}"
-    payload = {"startUrls": [{"url": url} for url in urls_validas]}
+    actor_slug = (actor_id or "LpVuK3Zozwuipa5bp").strip()
+    endpoint = f"https://api.apify.com/v2/actors/{actor_slug}/run-sync-get-dataset-items"
+
+    headers = {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": f"Bearer {apify_api_token.strip()}",
+    }
+
+    payload = {
+        "profileScraperMode": profile_scraper_mode,
+        "queries": urls_validas,
+    }
 
     logger.info(
-        "Chamando Apify diretamente para %s perfis no actor %s",
+        "Chamando Apify para %s perfis no actor %s",
         len(urls_validas),
         actor_slug,
     )
 
-    response = requests.post(endpoint, json=payload, timeout=180)
+    response = requests.post(
+        endpoint, headers=headers, json=payload, timeout=180
+    )
+
     if response.status_code >= 400:
         try:
             error_details = response.json()
         except ValueError:
             error_details = response.text
-        logger.error("Erro na chamada direta do Apify: status=%s body=%s", response.status_code, error_details)
+        logger.error(
+            "Erro na chamada do Apify: status=%s body=%s",
+            response.status_code,
+            error_details,
+        )
         response.raise_for_status()
 
     data = response.json()
@@ -319,7 +341,6 @@ def raspar_perfis_linkedin_apify(
             raise RuntimeError(f"Apify respondeu com erro: {data['error']}")
 
     return []
-
 
 def enriquecer_emails_kipflow(
     linkedin_ids: list[str],
