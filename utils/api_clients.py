@@ -113,10 +113,14 @@ def extrair_empresas_e_decisores(
 ) -> list[Empresa]:
     """Extrai empresas e decisores com output estruturado, com ou sem Google Search tool."""
 
+    logger.warning("=== DEBUG IMPORT GOOGLE GENAI ===")
     try:
         from google import genai
         from google.genai import types
+        logger.warning("=== DEBUG IMPORT GOOGLE GENAI OK ===")
     except Exception as exc:  # pragma: no cover
+        logger.warning("=== DEBUG IMPORT GOOGLE GENAI ERRO ===")
+        logger.warning("Erro ao importar google-genai: %s", exc)
         raise RuntimeError(
             "Dependência 'google-genai' não encontrada. Instale com: pip install google-genai"
         ) from exc
