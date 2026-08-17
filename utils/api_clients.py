@@ -274,33 +274,51 @@ def buscar_dados_cnpj(
 def raspar_perfis_linkedin_apify(
     linkedin_urls: list[str],
     apify_api_token: str,
-    actor_id: str = "LpVuK3Zozwuipa5bp",
+    actor_id: str = "harvestapi~linkedin-profile-scraper",
 ) -> list[dict[str, Any]]:
-    """Executa o actor da HarvestAPI no Apify para extrair dados de perfis do LinkedIn."""
-
-    try:
-        from apify_client import ApifyClient
-    except Exception as exc:  # pragma: no cover
-        raise RuntimeError(
-            "Dependência 'apify-client' incompatível. Instale a combinação compatível: "
-            "pip install 'apify-client==1.8.1' 'apify-shared==0.22.0'"
-        ) from exc
+    """Executa o actor da HarvestAPI no Apify via API HTTP direta para extrair perfis do LinkedIn."""
 
     if not linkedin_urls:
         return []
 
-    client = ApifyClient(apify_api_token)
-    run_input = {
-        "startUrls": [{"url": url} for url in linkedin_urls],
-    }
+    if not apify_api_token:
+        raise ValueError("Apify API token ausente. Configure a variável APIFY_API_TOKEN.")
 
-    run = client.actor(actor_id).call(run_input=run_input)
-    dataset_id = run.get("defaultDatasetId")
-    if not dataset_id:
+    urls_validas = [url.strip() for url in linkedin_urls if url and str(url).strip()]
+    if not urls_validas:
         return []
 
-    items = list(client.dataset(dataset_id).iterate_items())
-    return items
+    actor_slug = (actor_id or "harvestapi~linkedin-profile-scraper").strip()
+    endpoint = f"https://api.apify.com/v2/actors/{actor_slug}/run-sync-get-dataset-items?token={apify_api_token}"
+    payload = {"startUrls": [{"url": url} for url in urls_validas]}
+
+    logger.info(
+        "Chamando Apify diretamente para %s perfis no actor %s",
+        len(urls_validas),
+        actor_slug,
+    )
+
+    response = requests.post(endpoint, json=payload, timeout=180)
+    if response.status_code >= 400:
+        try:
+            error_details = response.json()
+        except ValueError:
+            error_details = response.text
+        logger.error("Erro na chamada direta do Apify: status=%s body=%s", response.status_code, error_details)
+        response.raise_for_status()
+
+    data = response.json()
+
+    if isinstance(data, list):
+        return data
+
+    if isinstance(data, dict):
+        if isinstance(data.get("items"), list):
+            return data["items"]
+        if "error" in data:
+            raise RuntimeError(f"Apify respondeu com erro: {data['error']}")
+
+    return []
 
 
 def enriquecer_emails_kipflow(
