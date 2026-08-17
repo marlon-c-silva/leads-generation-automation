@@ -253,12 +253,12 @@ def dag_prospeccao_b2b():
 
     @task
     def extrair_leads_brutos(config: dict[str, Any], contexto_web: str) -> list[dict[str, Any]]:
-        logger.warning("=== DEBUG DAG CONFIG ===")
-        logger.warning(json.dumps(_debug_snapshot(config), ensure_ascii=False, indent=2))
-        logger.warning("=== DEBUG CONTEXTO_WEB ===")
-        logger.warning(contexto_web if contexto_web else "<vazio>")
-        logger.warning("=== DEBUG PROMPT BUSCA ===")
-        logger.warning(config["prompt_busca"])
+        # logger.warning("=== DEBUG DAG CONFIG ===")
+        # logger.warning(json.dumps(_debug_snapshot(config), ensure_ascii=False, indent=2))
+        # logger.warning("=== DEBUG CONTEXTO_WEB ===")
+        # logger.warning(contexto_web if contexto_web else "<vazio>")
+        # logger.warning("=== DEBUG PROMPT BUSCA ===")
+        # logger.warning(config["prompt_busca"])
 
         empresas = extrair_empresas_e_decisores(
             prompt_busca=config["prompt_busca"],
