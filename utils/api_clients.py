@@ -282,7 +282,8 @@ def raspar_perfis_linkedin_apify(
         from apify_client import ApifyClient
     except Exception as exc:  # pragma: no cover
         raise RuntimeError(
-            "Dependência 'apify-client' não encontrada. Instale com: pip install apify-client"
+            "Dependência 'apify-client' incompatível. Instale a combinação compatível: "
+            "pip install 'apify-client==1.8.1' 'apify-shared==0.22.0'"
         ) from exc
 
     if not linkedin_urls:
