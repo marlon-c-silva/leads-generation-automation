@@ -13,7 +13,7 @@
     "SERPER_API_KEY": "SUA_SERPER_API_KEY",
     "SERPER_NUM_RESULTS": "5",
     "APIFY_API_TOKEN": "SEU_APIFY_API_TOKEN",
-    "APIFY_LINKEDIN_ACTOR_ID": "LpVuK3Zozwuipa5bp",
+    "APIFY_LINKEDIN_ACTOR_ID": "harvestapi~linkedin-profile-scraper",
     "KIPFLOW_API_KEY": "SUA_KIPFLOW_API_KEY",
     "KIPFLOW_BASE_URL": "https://api.kipflow.com",
     "CNPJ_BASE_URL": "https://minhareceita.org",
