@@ -190,7 +190,7 @@ def dag_prospeccao_b2b():
             "apify_api_token": Variable.get("APIFY_API_TOKEN"),
             "linkedin_actor_id": Variable.get(
                 "APIFY_LINKEDIN_ACTOR_ID",
-                default_var="LpVuK3Zozwuipa5bp",
+                default_var="harvestapi~linkedin-profile-scraper",
             ),
             "kipflow_api_key": Variable.get("KIPFLOW_API_KEY"),
             "kipflow_base_url": Variable.get(
