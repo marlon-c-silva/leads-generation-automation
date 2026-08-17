@@ -358,11 +358,11 @@ def enriquecer_emails_kipflow(
             "API key ausente. Configure a chave de acesso da API."
         )
 
-    ids_limpos = [
-        item.strip() for item in linkedin_ids if item and str(item).strip()
-    ]
-    if not ids_limpos:
-        return []
+    # ids_limpos = [
+    #     item.strip() for item in linkedin_ids if item and str(item).strip()
+    # ]
+    # if not ids_limpos:
+    #     return []
 
     endpoint = f"{base_url.rstrip('/')}/contacts/v1/emails/profile?"
     headers = {
@@ -372,7 +372,7 @@ def enriquecer_emails_kipflow(
 
     resultados: list[dict[str, Any]] = []
 
-    for profile_id in ids_limpos:
+    for profile_id in linkedin_ids:
         params = {"linkedin_id": profile_id}
 
         try:
