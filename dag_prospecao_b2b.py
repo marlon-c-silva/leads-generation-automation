@@ -8,9 +8,12 @@ sys.path.append(str(Path(__file__).resolve().parent))
 
 
 import json
+import logging
 import re
 from datetime import datetime, timedelta
 from typing import Any
+
+logger = logging.getLogger(__name__)
 
 from airflow.decorators import dag, task
 from airflow.models import Variable
@@ -42,6 +45,21 @@ def _validar_identificador_sql(value: str, label: str) -> str:
 
 def _to_bool(value: str) -> bool:
     return value.strip().lower() in {"1", "true", "yes", "y", "sim"}
+
+
+def _mascarar_valor(v: Any) -> Any:
+    if v is None:
+        return None
+    if isinstance(v, str):
+        upper = v.upper()
+        if any(token in upper for token in ("KEY", "TOKEN", "SECRET", "PASSWORD", "API")):
+            return "***MASKED***"
+        return v
+    return v
+
+
+def _debug_snapshot(config: dict[str, Any]) -> dict[str, Any]:
+    return {key: _mascarar_valor(value) for key, value in config.items()}
 
 
 def _render_prompt_template(template: str, params: dict[str, Any]) -> str:
@@ -235,6 +253,13 @@ def dag_prospeccao_b2b():
 
     @task
     def extrair_leads_brutos(config: dict[str, Any], contexto_web: str) -> list[dict[str, Any]]:
+        logger.warning("=== DEBUG DAG CONFIG ===")
+        logger.warning(json.dumps(_debug_snapshot(config), ensure_ascii=False, indent=2))
+        logger.warning("=== DEBUG CONTEXTO_WEB ===")
+        logger.warning(contexto_web if contexto_web else "<vazio>")
+        logger.warning("=== DEBUG PROMPT BUSCA ===")
+        logger.warning(config["prompt_busca"])
+
         empresas = extrair_empresas_e_decisores(
             prompt_busca=config["prompt_busca"],
             gemini_api_key=config["gemini_api_key"],
