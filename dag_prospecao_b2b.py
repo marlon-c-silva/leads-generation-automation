@@ -306,8 +306,9 @@ def dag_prospeccao_b2b():
         linkedin_ids = [
             decisor.linkedin_id
             for decisor in empresa.decisores
-            if decisor.linkedin_id and decisor.linkedin_id.strip()
+            if decisor.linkedin_id
         ]
+        print(linkedin_ids)
 
         contatos = enriquecer_emails_kipflow(
             linkedin_ids=linkedin_ids,
