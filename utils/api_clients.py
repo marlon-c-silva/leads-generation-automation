@@ -107,7 +107,7 @@ def _extrair_linkedin_id(linkedin_url: str | None) -> str | None:
 def extrair_empresas_e_decisores(
     prompt_busca: str,
     gemini_api_key: str,
-    model: str = "gemini-2.5-flash",
+    model: str = "gemini-3.5-flash",
     usar_google_search_tool: bool = True,
     contexto_web: str | None = None,
 ) -> list[Empresa]:
@@ -165,6 +165,14 @@ def extrair_empresas_e_decisores(
         )
 
     full_prompt = f"{prompt_busca}{instruction_suffix}"
+
+    logger.warning("=== DEBUG GEMINI REQUEST ===")
+    logger.warning("model=%s", model)
+    logger.warning("usar_google_search_tool=%s", usar_google_search_tool)
+    logger.warning("contexto_web_presente=%s", bool(contexto_web))
+    logger.warning("contexto_web_tamanho=%s", len(contexto_web or ""))
+    logger.warning("=== DEBUG PROMPT FINAL ===")
+    logger.warning(full_prompt)
 
     tools = [types.Tool(google_search=types.GoogleSearch())] if usar_google_search_tool else None
 
